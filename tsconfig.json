@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "sourceMap": true
+  },
+  "paths": {
+    "~*": [
+      "./*"
+    ]
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}

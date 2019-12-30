@@ -1,0 +1,25 @@
+{
+  "name": "tauri-phaser",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "parcel build ./src/index.html",
+    "dev": "parcel ./src/index.html",
+    "tauri:build": "yarn build && tauri build",
+    "tauri:dev": "concurrently 'yarn dev' 'yarn tauri:source dev'"
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.2",
+    "cssnano": "^4.1.10",
+    "parcel": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.2.1",
+    "tauri": "^0.2.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4"
+  },
+  "dependencies": {
+    "phaser": "^3.21.0",
+    "phaser3-plugin-isometric": "^0.0.7"
+  }
+}
