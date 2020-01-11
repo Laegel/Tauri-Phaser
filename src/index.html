@@ -1,54 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Sample Project</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="MobileOptimized" content="320">
-    <meta http-equiv="cleartype" content="on">
-    <style>
-      html,
-      body,
-      canvas {
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-      }
 
-      #context-menu {
-        background: #FFF;
-      }
+<head>
+  <meta charset="UTF-8">
+  <title>Sample Project</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta http-equiv="cleartype" content="on">
+  <style>
+    html,
+    body,
+    canvas {
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+    }
 
-      #context-menu .title {
-        padding: 5px;
-      }
+    #context-menu {
+      background: #FFF;
+    }
 
-      #context-menu .content {
-        padding: 0;
-      }
+    #context-menu .title {
+      padding: 5px;
+    }
 
-      #context-menu .content li {
-        padding: 0;
-        display: block;
-        cursor: pointer;
-      }
+    #context-menu .content {
+      padding: 0;
+    }
 
-      .button-list {
+    #context-menu .content li {
+      padding: 0;
+      display: block;
+      cursor: pointer;
+    }
 
-      }
-    </style>
-  </head>
-  <body>
-    <div id="context-menu" style="display: none; position: absolute">
-      <div class="title">Building</div>
-      <ul class="content">
-        <li>Move</li>
-      </ul>
-    </div>
-    <ul class="button-list"><button data-type="house">House</button><button data-type="tavern">Tavern</button></ul>
-    <div id="content"></div>
-    <script src="./main.ts"></script>
-    <!-- <script src="app.bundle.js"></script> -->
-  </body>
+    .button-list {}
+  </style>
+</head>
+
+<body>
+  <div id="context-menu" style="display: none; position: absolute">
+    <div class="title">Building</div>
+    <ul class="content">
+      <li>Move</li>
+    </ul>
+  </div>
+  <ul class="button-list">
+    <button data-type="shop">Shop</button>
+    <button data-type="castle">Castle</button>
+    <button data-type="tree">Tree</button>
+  </ul>
+  <div id="coordinates"></div>
+  <div id="any"></div>
+  <!-- <button id="back-to">Back to 0,0</button> -->
+  <div id="content"></div>
+  <script src="./main.ts"></script>
+  <!-- <script src="app.bundle.js"></script> -->
+</body>
+
 </html>

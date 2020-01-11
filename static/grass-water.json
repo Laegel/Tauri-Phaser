@@ -643,7 +643,6 @@
   "orientation": "isometric",
   "properties": {},
   "renderorder": "right-down",
-  "tileheight": 32,
   "tilesets": [
     {
       "firstgid": 1,
@@ -746,6 +745,7 @@
       "tilewidth": 64
     }
   ],
+  "tileheight": 32,
   "tilewidth": 64,
   "version": 1,
   "width": 25
