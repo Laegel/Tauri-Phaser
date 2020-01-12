@@ -1,7 +1,4 @@
 import * as Phaser from "phaser";
-import Point3 from 'phaser3-plugin-isometric/src/Point3';
-import Skeleton from "./Skeleton";
-import IsometricTile from "./IsometricTile";
 
 
 import { $, $$ } from "./utils";
@@ -12,7 +9,6 @@ const any = $("#any");
 
 class IsoInteractionExample extends Phaser.Scene {
 
-  cursorPos: Point3;
   tiles: Phaser.GameObjects.Group;
 
   preload() {
@@ -20,14 +16,13 @@ class IsoInteractionExample extends Phaser.Scene {
     this.load.image("castle", "/castle.png");
     this.load.image("shop", "/shop.png");
     this.load.image("tree", "/tree.png");
-
   }
 
   create() {
-    this.cursorPos = new Point3();
-
-    const image = this.add.image(413.75, 305, "background").setScale(0.5);
-
+    const texture = this.textures.get("background");
+    const { width, height } = texture.getSourceImage();
+    this.add.image(width * 0.25, height * 0.25, "background").setScale(0.5);
+    
     const contextMenu = $('#context-menu');
 
     let zoom = 1;
@@ -54,11 +49,12 @@ class IsoInteractionExample extends Phaser.Scene {
           this.tiles.children.each((tile) => {
             const coordinates = JSON.parse(tile.polygonCoordinates);
             const polygon = new Phaser.Geom.Polygon(coordinates);
-            
+
             if (polygon.contains(pointer.worldX, pointer.worldY)) {
               // Find a better way to place stuff
               target.setX(coordinates[0].x);
               target.setY(coordinates[1].y);
+              target.setDepth(coordinates[1].y);
             }
           });
         };
@@ -85,7 +81,7 @@ class IsoInteractionExample extends Phaser.Scene {
       this.input.on('pointermove', pointerMove);
       this.input.on('pointerup', pointerUp);
 
-    }, this);
+    });
 
     this.input.on('pointermove', (pointer) => coordinates.innerText = pointer.worldX + ";" + pointer.worldY);
 
@@ -104,12 +100,7 @@ class IsoInteractionExample extends Phaser.Scene {
   }
 
   spawnTiles() {
-    const onLeave = function () {
-      this.setTint(0xFFFFFF);
-      this.off('pointerout', onLeave);
-    };
     this.tiles = this.add.group();
-    // X = 28, Y = 21
     for (let y = 0; y < 42; ++y) {
       for (let x = 0; x < 14; ++x) {
         const isEven = y % 2 === 0;
@@ -121,9 +112,9 @@ class IsoInteractionExample extends Phaser.Scene {
 
         const coordinates = [
           new Phaser.Geom.Point(initialX, initialY),
-          new Phaser.Geom.Point(initialX + 30, initialY + 15),
-          new Phaser.Geom.Point(initialX, initialY + 30),
-          new Phaser.Geom.Point(initialX - 30, initialY + 15)
+          new Phaser.Geom.Point(initialX + halfTileWidth, initialY + halfTileHeight),
+          new Phaser.Geom.Point(initialX, initialY + halfTileHeight * 2),
+          new Phaser.Geom.Point(initialX - halfTileWidth, initialY + halfTileHeight)
         ];
         const polygon = new Phaser.Geom.Polygon(coordinates);
         const gridSquare = this.add.graphics({ x: initialX, y: initialY, lineStyle: { alpha: 1, color: 0xFFFFFF } });
@@ -132,18 +123,18 @@ class IsoInteractionExample extends Phaser.Scene {
         gridSquare.strokePoints(polygon.points, true);
         gridSquare.setDepth(1);
         gridSquare.id = x + ';' + y;
-        
+
         const polygonX = x * halfTileWidth * 2 + (isEven ? 0 : halfTileWidth);
         const polygonY = -halfTileHeight + y * halfTileHeight;
 
 
         gridSquare.polygonCoordinates = JSON.stringify([
           { x: polygonX, y: polygonY },
-          { x: polygonX + halfTileWidth, y: polygonY + halfTileHeight},
-          { x: polygonX, y: polygonY + halfTileHeight * 2},
+          { x: polygonX + halfTileWidth, y: polygonY + halfTileHeight },
+          { x: polygonX, y: polygonY + halfTileHeight * 2 },
           { x: polygonX - halfTileWidth, y: polygonY + halfTileHeight }
         ]);
-        
+
         this.tiles.add(gridSquare);
       }
     }
