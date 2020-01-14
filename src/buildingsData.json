@@ -1,0 +1,23 @@
+{
+  "shop": {
+    "base": {
+      "width": 1,
+      "height": 2
+    },
+    "effectArea": 2
+  },
+  "castle": {
+    "base": {
+      "width": 3,
+      "height": 2
+    },
+    "effectArea": 2
+  },
+  "tree": {
+    "base": {
+      "width": 1,
+      "height": 1
+    },
+    "effectArea": 10
+  }
+}
