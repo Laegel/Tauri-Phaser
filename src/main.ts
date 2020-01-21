@@ -45,7 +45,104 @@ const getAreaCoordinates = (points) => {
     ++stop1;
   }
   return coordinates;
-}
+};
+
+const reachCoordinates = (counter, target, callback) => {
+  
+  let stop = 0;
+  while (counter <= target && stop < 10) {
+    callback(counter);
+    ++counter;
+    
+    ++stop;
+  }
+};
+
+const getEffectAreaCoordinates = (buildingCoordinates: SimplePoint[], effectAreaLength: number) => {
+  const areaCoordinates = [];
+  let current = {
+    ...buildingCoordinates[0]
+  };
+  let target = {
+    ...buildingCoordinates[1]
+  };
+
+  reachCoordinates(current.x, target.x, (value) => {
+    areaCoordinates.push({
+      x: value,
+      y: current.y - effectAreaLength
+    });
+  });
+
+  current = { ...buildingCoordinates[1] };
+  target = { ...buildingCoordinates[2] };
+
+  reachCoordinates(current.y, target.y, (value) => {
+    areaCoordinates.push({
+      x: current.x + effectAreaLength,
+      y: value
+    });
+  });
+  
+  current = { ...buildingCoordinates[3] };
+  target = { ...buildingCoordinates[2] };
+
+  reachCoordinates(current.x, target.x, (value) => {
+    areaCoordinates.push({
+      x: value,
+      y: current.y + effectAreaLength
+    });
+  });
+  
+  current = { ...buildingCoordinates[0] };
+  target = { ...buildingCoordinates[3] };
+  
+  reachCoordinates(current.y, target.y, (value) => {
+    areaCoordinates.push({
+      x: current.x - effectAreaLength,
+      y: value
+    });
+  });
+  return areaCoordinates;
+};
+
+const getAreaPolygon = (buildingCoordinates: SimplePoint[], effectAreaLength: number) => {
+  const points = [
+    {
+      x: buildingCoordinates[0].x,
+      y: buildingCoordinates[0].y - effectAreaLength
+    },
+    {
+      x: buildingCoordinates[1].x + 1,
+      y: buildingCoordinates[1].y - effectAreaLength
+    },
+    {
+      x: buildingCoordinates[1].x + 1 + effectAreaLength,
+      y: buildingCoordinates[1].y
+    },
+    {
+      x: buildingCoordinates[2].x + 1 + effectAreaLength,
+      y: buildingCoordinates[2].y
+    },
+    {
+      x: buildingCoordinates[2].x + 1,
+      y: buildingCoordinates[2].y + effectAreaLength
+    },
+    {
+      x: buildingCoordinates[3].x,
+      y: buildingCoordinates[3].y + 1 + effectAreaLength
+    },
+    {
+      x: buildingCoordinates[3].x - effectAreaLength,
+      y: buildingCoordinates[3].y 
+    },
+    {
+      x: buildingCoordinates[0].x - effectAreaLength,
+      y: buildingCoordinates[0].y
+    }
+  ].map(({x, y}: SimplePoint) => new Phaser.Geom.Point(x, y));
+  return new Phaser.Geom.Polygon(points);
+};
 
 
 const flattenPoint = ({ x, y }: SimplePoint) => `${x};${y}`;
@@ -126,11 +223,19 @@ class IsoInteractionExample extends Phaser.Scene {
 
           const isInsideOfMap = !areaCoordinates.find(({ x, y }) => x < 0 || y < 0);
           const isValidPosition = isInsideOfMap && coordinatesAreFree;
+
+          // const effectAreaCoordinates = getEffectAreaCoordinates(buildingCoordinates, targetBuildingData.effectArea);
+
+          const polygon = getAreaPolygon(buildingCoordinates, targetBuildingData.effectArea);
+
           this.tiles.children.each(subtile => {
-            if (simplifiedCoordinates.includes(flattenPoint(subtile.isoCoordinates))) {
+            const flattened = flattenPoint(subtile.isoCoordinates);
+            if (simplifiedCoordinates.includes(flattened)) {
               subtile.setFillStyle(isValidPosition ? 0x0000FF : 0xFF0000, 0.5);
+            } else if (polygon.contains(subtile.isoCoordinates.x, subtile.isoCoordinates.y)) {
+              subtile.setFillStyle(0x00FF00, 0.5);
             } else {
-              subtile.setFillStyle(0x00FF00, 0);
+              subtile.setFillStyle(0x000000, 0);
             }
           });
           target.areaCoordinates = areaCoordinates;
